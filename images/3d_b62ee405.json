@@ -1,0 +1,124 @@
+{
+  "id": "3d_b62ee405",
+  "topic": "太阳系的3D穿越课堂",
+  "created_at": "2026-07-16T11:16:46.145429",
+  "scenes": [
+    {
+      "id": "scene_1",
+      "name": "太阳系探索之旅",
+      "subtitle": "从地球上到太阳系的奇妙旅程",
+      "theme": "科技",
+      "description": "通过虚拟现实技术，学生可以置身于浩瀚宇宙中，近距离观察太阳系各行星的真实图像。",
+      "key_points": [
+        "了解太阳系八大行星的基本特征",
+        "学习行星的形成过程",
+        "认识黑洞和恒星"
+      ],
+      "related_scenes": [],
+      "npcs": [
+        {
+          "name": "太阳系探索之旅的向导",
+          "dialogue": "跟随我穿越星河，揭开太阳系的秘密。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "选择A：冥王星是不是真正的第九大行星？",
+          "knowledge": "太阳系八大行星"
+        },
+        {
+          "text": "选择B：它是从外太空来的吗？",
+          "knowledge": "黑洞的特征"
+        }
+      ],
+      "story": "在浩瀚无垠的宇宙中，一颗神秘星球正等待着你的探索。",
+      "panorama_url": "images/3d_b62ee405_scene1.png"
+    },
+    {
+      "id": "scene_2",
+      "name": "日食与月食观察",
+      "subtitle": "通过望远镜探索天象奇观",
+      "theme": "科技",
+      "description": "学生使用虚拟现实望远镜，观察并学习如何解释日食和月食现象。",
+      "key_points": [
+        "理解太阳、地球和月亮的位置关系",
+        "认识光的折射与反射原理",
+        "了解行星运动规律"
+      ],
+      "related_scenes": [
+        "scene_1"
+      ],
+      "npcs": [],
+      "choices": [],
+      "story": "",
+      "panorama_url": "images/3d_b62ee405_scene2.png"
+    },
+    {
+      "id": "scene_3",
+      "name": "探索火星之旅",
+      "subtitle": "从地球出发，迈向火星的梦想启程",
+      "theme": "科技",
+      "description": "学生通过VR技术与火星表面互动，学习如何在恶劣环境下生存。",
+      "key_points": [
+        "了解火星环境特点",
+        "设计未来的火星基地方案",
+        "掌握太空旅行知识"
+      ],
+      "related_scenes": [
+        "scene_1"
+      ],
+      "npcs": [
+        {
+          "name": "探索火星之旅的向导",
+          "dialogue": "让我们一起穿越到火星，看看它的气候与环境吧！"
+        }
+      ],
+      "choices": [
+        {
+          "text": "是冰冷干燥的沙漠吗？",
+          "knowledge": "火星环境特点"
+        },
+        {
+          "text": "还是覆盖着冰川的世界？",
+          "knowledge": "火星环境特点"
+        }
+      ],
+      "story": "想象自己站在一颗未知星球上，感受那里的冷空气与寂静。",
+      "panorama_url": "images/3d_b62ee405_scene3.png"
+    },
+    {
+      "id": "scene_4",
+      "name": "太阳系的故事",
+      "subtitle": "从古至今的太阳系历史",
+      "theme": "文化",
+      "description": "通过时间线回顾人类对太阳系的认识和发展历程。",
+      "key_points": [
+        "了解太阳系的历史变迁",
+        "认识重要科学家及其贡献",
+        "学会欣赏自然之美"
+      ],
+      "related_scenes": [
+        "scene_1"
+      ],
+      "npcs": [
+        {
+          "name": "太阳系的故事的向导",
+          "dialogue": "跟随我穿越时空隧道，探索太阳系的秘密。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "是哪颗行星离太阳最近？",
+          "knowledge": "地球"
+        },
+        {
+          "text": "谁发现了水星轨道的异常现象？",
+          "knowledge": "第谷·布拉赫"
+        }
+      ],
+      "story": "神秘的光束引领我们进入一个全新的3D宇宙世界。",
+      "panorama_url": "images/3d_b62ee405_scene4.png"
+    }
+  ],
+  "panorama_urls": []
+}
