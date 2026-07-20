@@ -118,18 +118,11 @@ body { background: #000; overflow: hidden; font-family: 'Microsoft YaHei', sans-
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="panorama-viewer.js"></script>
 
+<!-- 控制脚本 -->
 <script>
 let courseData = null;
 let currentSceneIdx = 0;
 let viewer = null;
-
-// ==========================================
-// 1. 工具函数：判断是否为手机设备
-// ==========================================
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-var isMobile = isMobileDevice(); // 提前算好，供后续使用
 
 async function init() {
   try {
@@ -137,13 +130,12 @@ async function init() {
     courseData = await res.json();
     document.getElementById('loading').classList.add('hidden');
     loadScene(0);
-    bindInteractionEvents();
+    bindInteractionEvents(); // 🟢 绑定滚轮 + 触摸滑动事件
   } catch(e) {
     document.getElementById('loading').innerHTML = '<p>❌ 场景加载失败，请检查 JSON 路径。</p>';
   }
 }
 
-// 预加载缓存
 const preloadImages = {};
 
 function loadScene(idx) {
@@ -152,20 +144,24 @@ function loadScene(idx) {
   currentSceneIdx = Math.max(0, Math.min(idx, courseData.scenes.length - 1));
   const scene = courseData.scenes[currentSceneIdx];
   
+  // 更新中央指示牌
   document.getElementById('scene-info').innerHTML = `📍 ${scene.name} · ${courseData.scenes.length}个场景 | 滚轮/滑动切换`;
   
+  // 更新底部选项按钮
   const choiceBar = document.getElementById('choice-bar');
   choiceBar.innerHTML = (scene.choices || []).map((c, i) =>
     `<button class="choice-btn" onclick="showKnowledge('${c.text}', '${c.knowledge}')">${c.text}</button>`
   ).join('');
   
-  // 预加载相邻图片
+  // ✅ 预加载下一张
   const nextIdx = (idx + 1) % scenes.length;
   if (!preloadImages[nextIdx] && scenes[nextIdx]?.panorama_url) {
     const img = new Image();
     img.src = scenes[nextIdx].panorama_url;
     preloadImages[nextIdx] = img;
   }
+  
+  // ✅ 预加载上一张
   const prevIdx = (idx - 1 + scenes.length) % scenes.length;
   if (!preloadImages[prevIdx] && scenes[prevIdx]?.panorama_url) {
     const img = new Image();
@@ -173,27 +169,28 @@ function loadScene(idx) {
     preloadImages[prevIdx] = img;
   }
   
+  // 加载当前图
   if (viewer) viewer.dispose();
   viewer = new PanoramaViewer('pano-container', {
     imageUrl: scenes[currentSceneIdx].panorama_url,
     autoRotate: true
   });
   
-  // 🟢 智能发声：如果是电脑，自动朗读；如果是手机，交给按钮触发
-  if (!isMobile) {
-    const text = `${scene.name}。${scene.description || scene.key_points?.join('，') || ''}`;
-    speakText(text);
-  }
+  // 在 loadScene 末尾
+	const text = `${scene.name}。${scene.description || scene.key_points?.join('，') || ''}`;
+	console.log('🔊 准备朗读:', text);
+	speakText(text);
 }
 
 // ==========================================
-// 2. 交互事件：电脑滚轮 + 手机滑动切换
+// 🟢 交互事件：同时支持 电脑滚轮 和 手机滑动
 // ==========================================
 function bindInteractionEvents() {
   const container = document.getElementById('pano-container');
   if (!container) return;
   
   let wheelTimeout;
+  // 1. 电脑端：鼠标滚轮切换
   container.addEventListener('wheel', (e) => {
     e.preventDefault();
     clearTimeout(wheelTimeout);
@@ -210,7 +207,7 @@ function bindInteractionEvents() {
     }, 300);
   }, { passive: false });
 
-  // 手机滑动切换
+  // 2. 手机端：手指上下滑动切换
   let touchStartY = 0;
   let touchEndY = 0;
   
@@ -220,37 +217,47 @@ function bindInteractionEvents() {
 
   container.addEventListener('touchend', (e) => {
     touchEndY = e.changedTouches[0].screenY;
-    const swipeDistance = touchStartY - touchEndY;
-    const minSwipeDistance = 80;
-    if (Math.abs(swipeDistance) < minSwipeDistance) return;
-    
-    const scenes = courseData?.scenes || [];
-    if (scenes.length <= 1) return;
-    let nextIdx = currentSceneIdx;
-    if (swipeDistance > 0) {
-      nextIdx = (currentSceneIdx + 1) % scenes.length;
-    } else {
-      nextIdx = (currentSceneIdx - 1 + scenes.length) % scenes.length;
-    }
-    loadScene(nextIdx);
+    handleSwipe();
   }, { passive: true });
+
+  // 在 bindInteractionEvents 函数内部，找到 handleSwipe，替换为这个：
+	function handleSwipe() {
+		const swipeDistance = touchStartY - touchEndY;
+		const minSwipeDistance = 80; // 加大阈值，防止跟拖拽冲突
+
+		if (Math.abs(swipeDistance) < minSwipeDistance) {
+			return; // 滑动距离小，认为是拖拽旋转视角，不触发切屏
+		}
+		
+		// 滑动距离够大，判定为切屏
+		const scenes = courseData?.scenes || [];
+		if (scenes.length <= 1) return;
+		let nextIdx = currentSceneIdx;
+		if (swipeDistance > 0) {
+			nextIdx = (currentSceneIdx + 1) % scenes.length;
+		} else {
+			nextIdx = (currentSceneIdx - 1 + scenes.length) % scenes.length;
+		}
+		loadScene(nextIdx);
+	}
 }
 
 // ==========================================
-// 3. 语音朗读系统
+// 🟢 语音系统：电脑自动播放 + 手机点击激活
 // ==========================================
-var isAudioUnlocked = false;
 
+// 1. 判断是否为手机
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+var audioActivated = false; // 是否已激活音频
+
+// 2. 核心朗读函数 (必须定义在调用之前)
 function speakText(text) {
   if (!text || text.length < 2) return;
   if (!window.speechSynthesis) return;
-
-  // 🟢 手机端拦截：如果没解锁，就直接返回，不执行任何语音命令
-  if (isMobile && !isAudioUnlocked) {
-    console.log("🔇 手机语音未解锁，等待用户点击开启");
-    return;
-  }
-
+  
   speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'zh-CN';
@@ -259,6 +266,7 @@ function speakText(text) {
   speechSynthesis.speak(utterance);
 }
 
+// NPC 对话
 function talkNPC(name, dialogue) {
   const bubble = document.getElementById('dialogue-bubble');
   bubble.innerHTML = `<strong>${name}：</strong><br>${dialogue}`;
@@ -267,6 +275,7 @@ function talkNPC(name, dialogue) {
   speakText(dialogue);
 }
 
+// 知识卡片
 function showKnowledge(text, knowledge) {
   const bubble = document.getElementById('dialogue-bubble');
   bubble.innerHTML = `<strong>📖 ${text}</strong><br><span style="font-size:13px;color:#aaa;margin-top:8px;display:block;">${knowledge}</span>`;
@@ -276,26 +285,31 @@ function showKnowledge(text, knowledge) {
 }
 
 // ==========================================
-// 4. 手机端：声音解锁按钮（仅在手机上有效）
+// 🟢 真正的“声音解锁”按钮（手机端专用）
 // ==========================================
-document.getElementById('enable-audio').onclick = function() {
-    if (!isMobile) {
-        this.remove(); // 电脑上点它就直接删掉
-        return;
-    }
+var audioUnlocked = false;
 
-    isAudioUnlocked = true;
-    
-    // 按钮做出即时反馈（改成“已开启”）
-    this.textContent = "✅ 已开启";
-    
-    // 立即朗读一句话，证明解锁成功
-    speakText("语音已开启，欢迎体验梵高艺术展。");
-    
-    // 2秒后优雅移除按钮
-    setTimeout(() => {
-        if (this.parentNode) this.remove();
-    }, 2000);
+// 替换 enable-audio 的 onclick
+document.getElementById('enable-audio').onclick = function() {
+  // 方法1：Web Audio 激活
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  oscillator.connect(audioCtx.destination);
+  oscillator.start(0);
+  oscillator.stop(0.01);
+  
+  // 方法2：同时激活 speechSynthesis
+  if (window.speechSynthesis) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance('你好');
+    u.lang = 'zh-CN';
+    u.volume = 1;
+    speechSynthesis.speak(u);
+  }
+  
+  audioUnlocked = true;
+  this.textContent = '✅ 已开启';
+  setTimeout(() => this.remove(), 2000);
 };
 
 window.onload = init;
