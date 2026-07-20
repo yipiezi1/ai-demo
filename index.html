@@ -18,7 +18,11 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #0
 
 /* ===== 英雄区 ===== */
 .hero { position: relative; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
-.hero-bg { position: absolute; inset: 0; background: url('images/vangogh.png') center/cover no-repeat; filter: brightness(0.3) blur(2px); transform: scale(1.05); }
+.hero-bg { 
+  position: absolute; inset: 0; 
+  background: linear-gradient(135deg, #1a1a3e 0%, #16213e 50%, #0a0a1a 100%);
+  filter: brightness(0.3);
+}
 .hero-content { position: relative; z-index: 1; }
 .hero h1 { font-size: 3.2rem; font-weight: bold; margin-bottom: 16px; background: linear-gradient(135deg, #fff, #a8b8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .hero p { font-size: 1.2rem; color: rgba(255,255,255,0.7); margin-bottom: 40px; max-width: 600px; }
@@ -149,16 +153,19 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #0
 @media (max-width: 768px) {
   .tab-btn { padding: 10px 20px; font-size: 0.9rem; }
 }
+
+/* 🟢 增加这个样式，让图片加载后平滑浮现，而不是瞬间闪现 */
+.lazy-img {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.lazy-img.loaded {
+  opacity: 1;
+}
 </style>
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?42735ef1560e094f637800e7b49a90de";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -199,34 +206,58 @@ var _hmt = _hmt || [];
   <div class="cards">
     <!-- 梵高艺术展 -->
     <a href="scene_vangogh.html" target="_blank" class="card" style="text-decoration:none;color:inherit;">
-      <div class="card-img"><img src="images/3d_0b7a54f5_scene1.png" alt="梵高艺术展"></div>
+      <div class="card-img">
+        <!-- 🟢 这里加上 class="lazy-img" 和 data-src -->
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
+             data-src="images/3d_0b7a54f5_scene1.webp"
+             alt="梵高艺术展"
+             class="lazy-img">
+      </div>
       <div class="card-body">
         <h3>🎨 梵高艺术展</h3>
         <p>沉浸式画展体验，近距离欣赏《星空》《向日葵》等名作</p>
         <div class="card-tags"><span class="tag">艺术</span><span class="tag">历史</span></div>
       </div>
     </a>
+
     <!-- 太阳系 -->
     <a href="scene_solar.html" target="_blank"  class="card" style="text-decoration:none;color:inherit;">
-      <div class="card-img"><img src="images/3d_b62ee405_scene1.png" alt="太阳系"></div>
+      <div class="card-img">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
+             data-src="images/3d_b62ee405_scene1.webp"
+             alt="太阳系"
+             class="lazy-img">
+      </div>
       <div class="card-body">
         <h3>🌌 太阳系探索</h3>
         <p>穿越星际，从水星到海王星，体验壮丽的宇宙景观</p>
         <div class="card-tags"><span class="tag">天文</span><span class="tag">科学</span></div>
       </div>
     </a>
+
     <!-- 恐龙时代 -->
     <a href="scene_dino.html" target="_blank"  class="card" style="text-decoration:none;color:inherit;">
-      <div class="card-img"><img src="images/3d_14807d9b_scene1.png" alt="恐龙时代"></div>
+      <div class="card-img">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
+             data-src="images/3d_14807d9b_scene1.webp"
+             alt="恐龙时代"
+             class="lazy-img">
+      </div>
       <div class="card-body">
         <h3>🦕 史前恐龙时代</h3>
         <p>回到侏罗纪，与霸王龙、三角龙面对面</p>
         <div class="card-tags"><span class="tag">生物</span><span class="tag">考古</span></div>
       </div>
     </a>
+
     <!-- 宋代汴京 -->
     <a href="scene_bianjing.html" target="_blank"  class="card" style="text-decoration:none;color:inherit;">
-      <div class="card-img"><img src="images/3d_1def7a60_scene4.png" alt="宋代汴京"></div>
+      <div class="card-img">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
+             data-src="images/3d_1def7a60_scene4.webp"
+             alt="宋代汴京"
+             class="lazy-img">
+      </div>
       <div class="card-body">
         <h3>🏛️ 宋代繁华汴京</h3>
         <p>穿越千年，漫步清明上河图中的繁华街市</p>
@@ -287,9 +318,6 @@ var _hmt = _hmt || [];
   <p style="margin-top:8px;">© 2026 AI 穿越课堂 · 专注垂直行业 AI 定制</p>
 </footer>
 <script>
-fetch('/.netlify/functions/track');
-</script>
-<script>
   // Tab 切换逻辑
   document.querySelectorAll('.tab-btn').forEach(button => {
     button.addEventListener('click', function() {
@@ -305,6 +333,28 @@ fetch('/.netlify/functions/track');
       const targetId = this.getAttribute('data-target');
       document.getElementById(targetId).classList.add('active');
     });
+  });
+  
+    // 优雅的懒加载监控
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const realSrc = img.getAttribute('data-src');
+        if (realSrc) {
+          img.src = realSrc;
+          // 🟢 核心修复：加上 loaded 类触发透明度动画
+          img.onload = () => {
+            img.classList.add('loaded');
+          };
+          observer.unobserve(img);
+        }
+      }
+    });
+  }, { rootMargin: '200px' });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.lazy-img').forEach(img => observer.observe(img));
   });
 </script>
 </body>
