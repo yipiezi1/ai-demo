@@ -69,17 +69,46 @@ class PanoramaViewer {
 	}
   
   bindEvents() {
-    this.container.addEventListener('mousedown', (e) => { this.isDragging = true; this.prevMouse = { x: e.clientX, y: e.clientY }; });
-    window.addEventListener('mouseup', () => { this.isDragging = false; });
-    window.addEventListener('mousemove', (e) => {
-      if (!this.isDragging || !this.sphere) return;
-      const dx = e.clientX - this.prevMouse.x;
-      const dy = e.clientY - this.prevMouse.y;
-      this.sphere.rotation.y += dx * 0.005;
-      this.sphere.rotation.x += dy * 0.005;
-      this.sphere.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.sphere.rotation.x));
-      this.prevMouse = { x: e.clientX, y: e.clientY };
-    });
+	  const container = this.container;
+	  let isDragging = false;
+	  let prevPos = { x: 0, y: 0 };
+
+	  // ✅ 鼠标
+	  container.addEventListener('mousedown', (e) => {
+		isDragging = true;
+		prevPos = { x: e.clientX, y: e.clientY };
+	  });
+	  
+	  // ✅ 触摸
+	  container.addEventListener('touchstart', (e) => {
+		if (e.touches.length === 1) {
+		  isDragging = true;
+		  prevPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+		}
+	  }, { passive: false });
+	  
+	  // ✅ 移动（鼠标 + 触摸）
+	  const onMove = (x, y) => {
+		if (!isDragging || !this.sphere) return;
+		const dx = x - prevPos.x;
+		const dy = y - prevPos.y;
+		this.sphere.rotation.y += dx * 0.005;
+		this.sphere.rotation.x += dy * 0.005;
+		this.sphere.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.sphere.rotation.x));
+		prevPos = { x, y };
+	  };
+	  
+	  window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+	  window.addEventListener('touchmove', (e) => {
+		if (e.touches.length === 1) {
+		  onMove(e.touches[0].clientX, e.touches[0].clientY);
+		}
+	  }, { passive: false });
+	  
+	  // ✅ 结束
+	  window.addEventListener('mouseup', () => { isDragging = false; });
+	  window.addEventListener('touchend', () => { isDragging = false; });
+    
     this.container.addEventListener('wheel', (e) => {
       if (!this.sphere) return;
       this.camera.fov += e.deltaY * 0.05;
