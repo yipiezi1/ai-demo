@@ -34,7 +34,7 @@
         }
       ],
       "story": "在繁华的汴京街头，小朋友们看到了热闹非凡的市集",
-      "panorama_url": "images/3d_1def7a60_scene1.png"
+      "panorama_url": "images/3d_1def7a60_scene1.webp"
     },
     {
       "id": "scene_2",
@@ -68,7 +68,7 @@
         }
       ],
       "story": "踏入这方土地，四季花开不败，一草一木皆成诗",
-      "panorama_url": "images/3d_1def7a60_scene2.png"
+      "panorama_url": "images/3d_1def7a60_scene2.webp"
     },
     {
       "id": "scene_3",
@@ -102,7 +102,7 @@
         }
       ],
       "story": "汴京的夜色如梦似幻，霓虹闪烁间，一行行飞檐斗拱映入眼帘。",
-      "panorama_url": "images/3d_1def7a60_scene3.png"
+      "panorama_url": "images/3d_1def7a60_scene3.webp"
     },
     {
       "id": "scene_4",
@@ -135,7 +135,7 @@
         }
       ],
       "story": "月色如水，汴河两岸灯火阑珊，仿佛穿越到了繁华的宋朝夜市。",
-      "panorama_url": "images/3d_1def7a60_scene4.png"
+      "panorama_url": "images/3d_1def7a60_scene4.webp"
     }
   ],
   "panorama_urls": []

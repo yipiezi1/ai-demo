@@ -33,7 +33,7 @@
         }
       ],
       "story": "在一片静谧的艺术空间中，光影交错间仿佛能听见梵高的心跳。",
-      "panorama_url": "images/3d_0b7a54f5_scene1.png"
+      "panorama_url": "images/3d_0b7a54f5_scene1.webp"
     },
     {
       "id": "scene_2",
@@ -65,7 +65,7 @@
         }
       ],
       "story": "3D科技带你亲历19世纪末的荷兰小镇，探索梵高的秘密世界。",
-      "panorama_url": "images/3d_0b7a54f5_scene2.png"
+      "panorama_url": "images/3d_0b7a54f5_scene2.webp"
     },
     {
       "id": "scene_3",
@@ -97,7 +97,7 @@
         }
       ],
       "story": "在一片神秘而明亮的艺术空间中，闪烁着19世纪的巴黎夜景。",
-      "panorama_url": "images/3d_0b7a54f5_scene3.png"
+      "panorama_url": "images/3d_0b7a54f5_scene3.webp"
     },
     {
       "id": "scene_4",
@@ -127,7 +127,7 @@
         }
       ],
       "story": "光影交错间，梵高的世界在3D空间中缓缓展现在眼前。",
-      "panorama_url": "images/3d_0b7a54f5_scene4.png"
+      "panorama_url": "images/3d_0b7a54f5_scene4.webp"
     }
   ],
   "panorama_urls": []

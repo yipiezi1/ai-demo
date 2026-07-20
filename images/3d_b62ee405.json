@@ -32,7 +32,7 @@
         }
       ],
       "story": "在浩瀚无垠的宇宙中，一颗神秘星球正等待着你的探索。",
-      "panorama_url": "images/3d_b62ee405_scene1.png"
+      "panorama_url": "images/3d_b62ee405_scene1.webp"
     },
     {
       "id": "scene_2",
@@ -51,7 +51,7 @@
       "npcs": [],
       "choices": [],
       "story": "",
-      "panorama_url": "images/3d_b62ee405_scene2.png"
+      "panorama_url": "images/3d_b62ee405_scene2.webp"
     },
     {
       "id": "scene_3",
@@ -84,7 +84,7 @@
         }
       ],
       "story": "想象自己站在一颗未知星球上，感受那里的冷空气与寂静。",
-      "panorama_url": "images/3d_b62ee405_scene3.png"
+      "panorama_url": "images/3d_b62ee405_scene3.webp"
     },
     {
       "id": "scene_4",
@@ -117,7 +117,7 @@
         }
       ],
       "story": "神秘的光束引领我们进入一个全新的3D宇宙世界。",
-      "panorama_url": "images/3d_b62ee405_scene4.png"
+      "panorama_url": "images/3d_b62ee405_scene4.webp"
     }
   ],
   "panorama_urls": []

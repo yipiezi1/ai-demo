@@ -33,7 +33,7 @@
         }
       ],
       "story": "在一片被古老时间遗忘的土地上，阳光透过繁茂的古树缝隙洒下斑驳。四周是错落有致的沙丘与不时翻动的土壤。",
-      "panorama_url": "images/3d_14807d9b_scene1.png"
+      "panorama_url": "images/3d_14807d9b_scene1.webp"
     },
     {
       "id": "scene_2",
@@ -65,7 +65,7 @@
         }
       ],
       "story": "在这个充满想象力的博物馆里，时间仿佛倒流，带领你走进那个远古时代的生态奇观。",
-      "panorama_url": "images/3d_14807d9b_scene2.png"
+      "panorama_url": "images/3d_14807d9b_scene2.webp"
     },
     {
       "id": "scene_3",
@@ -97,7 +97,7 @@
         }
       ],
       "story": "在一个充满想象与幻想的3D穿越课堂里，我们即将一起开启一场惊心动魄的史前之旅。",
-      "panorama_url": "images/3d_14807d9b_scene3.png"
+      "panorama_url": "images/3d_14807d9b_scene3.webp"
     },
     {
       "id": "scene_4",
@@ -127,7 +127,7 @@
         }
       ],
       "story": "穿越时空的传送门缓缓打开，3亿年前的时光仿佛就在眼前。",
-      "panorama_url": "images/3d_14807d9b_scene4.png"
+      "panorama_url": "images/3d_14807d9b_scene4.webp"
     }
   ],
   "panorama_urls": []
