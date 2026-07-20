@@ -175,6 +175,9 @@ function loadScene(idx) {
     imageUrl: scenes[currentSceneIdx].panorama_url,
     autoRotate: true
   });
+  
+  // 🟢 重要：尝试朗读（由语音模块决定是否拦截）
+  speakText(`${scene.name}。${scene.description || ''}`);
 }
 
 // ==========================================
