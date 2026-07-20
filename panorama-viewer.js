@@ -35,38 +35,18 @@ class PanoramaViewer {
   }
   
   loadTexture() {
-	  let url = this.imageUrl;
-	  // ✅ 自动尝试 WebP，失败则回退 PNG
-	  const tryLoad = (ext) => {
-		return new Promise((resolve, reject) => {
-		  const loader = new THREE.TextureLoader();
-		  loader.load(url.replace('.png', ext).replace('.webp', ext), resolve, undefined, reject);
-		});
-	  };
-	  
-	  const load = async () => {
-		try {
-		  return await tryLoad('.webp');
-		} catch {
-		  try {
-			return await tryLoad('.png');
-		  } catch {
-			console.error('全景图加载失败:', url);
-			return null;
-		  }
-		}
-	  };
-	  
-	  load().then(texture => {
-		if (!texture) return;
-		const geometry = new THREE.SphereGeometry(500, 60, 40);
-		geometry.scale(-1, 1, 1);
-		const material = new THREE.MeshBasicMaterial({ map: texture });
-		this.sphere = new THREE.Mesh(geometry, material);
-		this.scene.add(this.sphere);
-		this.onLoad();
-	  });
-	}
+    const loader = new THREE.TextureLoader();
+    loader.load(this.imageUrl, (texture) => {
+      const geometry = new THREE.SphereGeometry(500, 60, 40);
+      geometry.scale(-1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ map: texture });
+      this.sphere = new THREE.Mesh(geometry, material);
+      this.scene.add(this.sphere);
+      this.onLoad();
+    }, undefined, () => {
+      console.error('全景图加载失败:', this.imageUrl);
+    });
+  }
   
   bindEvents() {
 	  const container = this.container;
