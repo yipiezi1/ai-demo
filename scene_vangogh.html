@@ -136,6 +136,8 @@ async function init() {
   }
 }
 
+const preloadImages = {};
+
 function loadScene(idx) {
   if (!courseData?.scenes) return;
   currentSceneIdx = Math.max(0, Math.min(idx, courseData.scenes.length - 1));
@@ -150,17 +152,28 @@ function loadScene(idx) {
     `<button class="choice-btn" onclick="showKnowledge('${c.text}', '${c.knowledge}')">${c.text}</button>`
   ).join('');
   
-  // 加载全景图
-  if (viewer) viewer.dispose();
-  if (scene.panorama_url) {
-    viewer = new PanoramaViewer('pano-container', {
-      imageUrl: scene.panorama_url,
-      autoRotate: true
-    });
+  // ✅ 预加载下一张
+  const nextIdx = (idx + 1) % scenes.length;
+  if (!preloadImages[nextIdx] && scenes[nextIdx]?.panorama_url) {
+    const img = new Image();
+    img.src = scenes[nextIdx].panorama_url;
+    preloadImages[nextIdx] = img;
   }
   
-  // 🟢 重要：尝试朗读（由语音模块决定是否拦截）
-  speakText(`${scene.name}。${scene.description || ''}`);
+  // ✅ 预加载上一张
+  const prevIdx = (idx - 1 + scenes.length) % scenes.length;
+  if (!preloadImages[prevIdx] && scenes[prevIdx]?.panorama_url) {
+    const img = new Image();
+    img.src = scenes[prevIdx].panorama_url;
+    preloadImages[prevIdx] = img;
+  }
+  
+  // 加载当前图
+  if (viewer) viewer.dispose();
+  viewer = new PanoramaViewer('pano-container', {
+    imageUrl: scenes[currentSceneIdx].panorama_url,
+    autoRotate: true
+  });
 }
 
 // ==========================================
@@ -276,17 +289,27 @@ function showKnowledge(text, knowledge) {
 // ==========================================
 var audioUnlocked = false;
 
+// 替换 enable-audio 的 onclick
 document.getElementById('enable-audio').onclick = function() {
+  // 方法1：Web Audio 激活
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  oscillator.connect(audioCtx.destination);
+  oscillator.start(0);
+  oscillator.stop(0.01);
+  
+  // 方法2：同时激活 speechSynthesis
   if (window.speechSynthesis) {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance('你好');
     u.lang = 'zh-CN';
     u.volume = 1;
     speechSynthesis.speak(u);
-    audioUnlocked = true;
-    this.textContent = '✅ 已开启';
-    setTimeout(() => this.remove(), 1500);
   }
+  
+  audioUnlocked = true;
+  this.textContent = '✅ 已开启';
+  setTimeout(() => this.remove(), 2000);
 };
 
 window.onload = init;
