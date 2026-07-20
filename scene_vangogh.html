@@ -290,26 +290,17 @@ function showKnowledge(text, knowledge) {
 var audioUnlocked = false;
 
 // 替换 enable-audio 的 onclick
+// 开启语音按钮
 document.getElementById('enable-audio').onclick = function() {
-  // 方法1：Web Audio 激活
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  oscillator.connect(audioCtx.destination);
-  oscillator.start(0);
-  oscillator.stop(0.01);
-  
-  // 方法2：同时激活 speechSynthesis
-  if (window.speechSynthesis) {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance('你好');
-    u.lang = 'zh-CN';
-    u.volume = 1;
-    speechSynthesis.speak(u);
-  }
+  // 用真实的短文本激活 speechSynthesis
+  const u = new SpeechSynthesisUtterance('语音已开启');
+  u.lang = 'zh-CN';
+  u.volume = 1;
+  speechSynthesis.speak(u);
   
   audioUnlocked = true;
   this.textContent = '✅ 已开启';
-  setTimeout(() => this.remove(), 2000);
+  setTimeout(() => this.remove(), 1500);
 };
 
 window.onload = init;
