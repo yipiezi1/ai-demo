@@ -176,8 +176,10 @@ function loadScene(idx) {
     autoRotate: true
   });
   
-  // 🟢 重要：尝试朗读（由语音模块决定是否拦截）
-  speakText(`${scene.name}。${scene.description || ''}`);
+  // 在 loadScene 末尾
+	const text = `${scene.name}。${scene.description || scene.key_points?.join('，') || ''}`;
+	console.log('🔊 准备朗读:', text);
+	speakText(text);
 }
 
 // ==========================================
@@ -253,21 +255,15 @@ var audioActivated = false; // 是否已激活音频
 
 // 2. 核心朗读函数 (必须定义在调用之前)
 function speakText(text) {
-    if (!text) return;
-    if (!window.speechSynthesis) return;
-
-    // 🟢 修改拦截逻辑：如果是手机，且音频未解锁，才拦截
-    if (isMobileDevice() && !audioUnlocked) {
-        console.log("🔇 手机音频未解锁，请点击右上角【开启语音】按钮");
-        return; 
-    }
-
-    // 正常朗读
-    speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.9;
-    speechSynthesis.speak(utterance);
+  if (!text || text.length < 2) return;
+  if (!window.speechSynthesis) return;
+  
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'zh-CN';
+  utterance.rate = 0.9;
+  utterance.volume = 1;
+  speechSynthesis.speak(utterance);
 }
 
 // NPC 对话
