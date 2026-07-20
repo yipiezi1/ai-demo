@@ -118,11 +118,18 @@ body { background: #000; overflow: hidden; font-family: 'Microsoft YaHei', sans-
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="panorama-viewer.js"></script>
 
-<!-- 控制脚本 -->
 <script>
 let courseData = null;
 let currentSceneIdx = 0;
 let viewer = null;
+
+// ==========================================
+// 1. 工具函数：判断是否为手机设备
+// ==========================================
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+var isMobile = isMobileDevice(); // 提前算好，供后续使用
 
 async function init() {
   try {
@@ -136,7 +143,7 @@ async function init() {
   }
 }
 
-// 🟢 预加载缓存
+// 预加载缓存
 const preloadImages = {};
 
 function loadScene(idx) {
@@ -172,12 +179,15 @@ function loadScene(idx) {
     autoRotate: true
   });
   
-  // 🟢 极度重要：取消这里的自动语音！
-  // 我们完全靠按钮触发声音，不在这里自动朗读。
+  // 🟢 智能发声：如果是电脑，自动朗读；如果是手机，交给按钮触发
+  if (!isMobile) {
+    const text = `${scene.name}。${scene.description || scene.key_points?.join('，') || ''}`;
+    speakText(text);
+  }
 }
 
 // ==========================================
-// 🟢 交互事件：支持 电脑滚轮 + 手机滑动切换
+// 2. 交互事件：电脑滚轮 + 手机滑动切换
 // ==========================================
 function bindInteractionEvents() {
   const container = document.getElementById('pano-container');
@@ -200,7 +210,7 @@ function bindInteractionEvents() {
     }, 300);
   }, { passive: false });
 
-  // 🟢 手机滑动切换
+  // 手机滑动切换
   let touchStartY = 0;
   let touchEndY = 0;
   
@@ -227,16 +237,17 @@ function bindInteractionEvents() {
 }
 
 // ==========================================
-// 🟢 核心语音系统（绝对安全版）
+// 3. 语音朗读系统
 // ==========================================
 var isAudioUnlocked = false;
 
 function speakText(text) {
-  if (!text || !window.speechSynthesis) return;
-  
-  // 🟢 核心锁：如果没解锁，直接失败退出（绝不浪费一次语音机会）
-  if (!isAudioUnlocked) {
-    console.log("🔇 手机语音未解锁，跳过朗读");
+  if (!text || text.length < 2) return;
+  if (!window.speechSynthesis) return;
+
+  // 🟢 手机端拦截：如果没解锁，就直接返回，不执行任何语音命令
+  if (isMobile && !isAudioUnlocked) {
+    console.log("🔇 手机语音未解锁，等待用户点击开启");
     return;
   }
 
@@ -264,17 +275,27 @@ function showKnowledge(text, knowledge) {
   speakText(knowledge);
 }
 
-// 🟢 直接触发解锁，并读一句话
+// ==========================================
+// 4. 手机端：声音解锁按钮（仅在手机上有效）
+// ==========================================
 document.getElementById('enable-audio').onclick = function() {
-    // 1. 标记解锁
+    if (!isMobile) {
+        this.remove(); // 电脑上点它就直接删掉
+        return;
+    }
+
     isAudioUnlocked = true;
     
-    // 2. 销毁按钮
-    this.remove();
-
-    // 3. 【最关键的一步】在点击解锁的一瞬间，立刻读一句欢迎词
-    // 此时浏览器已经授权音频通道，这是合法的“用户激活”！
-    speakText("语音已激活，欢迎体验梵高艺术展。");
+    // 按钮做出即时反馈（改成“已开启”）
+    this.textContent = "✅ 已开启";
+    
+    // 立即朗读一句话，证明解锁成功
+    speakText("语音已开启，欢迎体验梵高艺术展。");
+    
+    // 2秒后优雅移除按钮
+    setTimeout(() => {
+        if (this.parentNode) this.remove();
+    }, 2000);
 };
 
 window.onload = init;
