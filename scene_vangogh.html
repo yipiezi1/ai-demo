@@ -140,6 +140,7 @@ const preloadImages = {};
 
 function loadScene(idx) {
   if (!courseData?.scenes) return;
+  const scenes = courseData.scenes;
   currentSceneIdx = Math.max(0, Math.min(idx, courseData.scenes.length - 1));
   const scene = courseData.scenes[currentSceneIdx];
   
